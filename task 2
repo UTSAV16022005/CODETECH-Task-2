@@ -1,0 +1,82 @@
+def student_grade_tracker():
+    print("Welcome to the Student Grade Tracker!\n")
+
+    # Dictionary to store subjects and their corresponding grades
+    grades = {}
+
+    # Function to get a valid grade input
+    def get_grade(subject):
+        while True:
+            try:
+                grade = float(input(f"Enter the grade for {subject} (0-100): "))
+                if 0 <= grade <= 100:
+                    return grade
+                else:
+                    print("Invalid input. Grade must be between 0 and 100.")
+            except ValueError:
+                print("Invalid input. Please enter a numeric value.")
+
+    # Input loop for subjects and grades
+    while True:
+        subject = input("\nEnter the subject name (or type 'done' to finish): ").strip()
+        if subject.lower() == 'done':
+            break
+        elif subject == '':
+            print("Subject name cannot be empty. Please enter a valid subject name.")
+            continue
+        elif subject in grades:
+            print(f"Grade for {subject} is already recorded as {grades[subject]}.")
+            overwrite = input("Do you want to overwrite it? (yes/no): ").strip().lower()
+            if overwrite not in ['yes', 'y']:
+                continue
+        grade = get_grade(subject)
+        grades[subject] = grade
+
+    # Check if any grades were entered
+    if not grades:
+        print("\nNo grades entered. Exiting the program.")
+        return
+
+    # Calculate average grade
+    total = sum(grades.values())
+    count = len(grades)
+    average = total / count
+
+    # Determine letter grade based on average
+    def get_letter_grade(avg):
+        if avg >= 90:
+            return 'A'
+        elif avg >= 80:
+            return 'B'
+        elif avg >= 70:
+            return 'C'
+        elif avg >= 60:
+            return 'D'
+        else:
+            return 'F'
+
+    letter_grade = get_letter_grade(average)
+
+    # Map letter grades to GPA points (on a 4.0 scale)
+    def get_gpa_point(letter):
+        grade_to_gpa = {
+            'A': 4.0,
+            'B': 3.0,
+            'C': 2.0,
+            'D': 1.0,
+            'F': 0.0
+        }
+        return grade_to_gpa.get(letter, 0.0)
+
+    gpa = get_gpa_point(letter_grade)
+
+    # Display the grade report
+    print("\n--- Student Grade Report ---")
+    for subject, grade in grades.items():
+        print(f"{subject}: {grade}")
+    print(f"\nAverage Grade: {average:.2f}")
+    print(f"Letter Grade: {letter_grade}")
+    print(f"GPA: {gpa:.1f}")
+
+if __name__ == "__main__":
+    student_grade_tracker()
